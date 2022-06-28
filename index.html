@@ -1,0 +1,60 @@
+<!doctype html>
+<script>
+  (() => {
+    const ROUNDS = 5;
+    const WIN = 'win';
+    const LOSS = 'loss';
+    const TIE = 'tie';
+    const loserFor = {
+      'rock': 'scissors',
+      'paper': 'rock',
+      'scissors': 'paper',
+    };
+    const options = Object.keys(loserFor);
+
+    const computerMove = () => options[parseInt(Math.random() * 3)];
+    const title = s => s[0].toUpperCase() + s.slice(1);
+
+    function playerMove() {
+      let playerChoice;
+      do {
+        playerChoice = prompt(`Pick ${options.join(', ')}!`).toLowerCase();
+      } while (!options.includes(playerChoice))
+      return playerChoice;
+    }
+
+    function play() {
+      const computer = computerMove();
+      const player = playerMove();
+      if (computer === player) {
+        return ['Tie!', TIE];
+      } else if (loserFor[player] === computer) {
+        return [`You win! ${title(player)} beats ${title(computer)}!`, WIN];
+      } else {
+        return [`You lose! ${title(computer)} beats ${title(player)}!`, LOSS];
+      }
+    }
+
+    function game() {
+      let playerWins = computerWins = 0;
+      for (let i = 0; i < ROUNDS; i++) {
+        const [message, result] = play();
+        console.log(message);
+        switch(result) {
+          case WIN:
+            playerWins++;
+            break;
+          case LOSS:
+            computerWins++;
+            break;
+        }
+      }
+      const result = playerWins === computerWins ? 'Draw!' : (
+        playerWins > computerWins ? 'You win the game!' : 'You lose the game!'
+      );
+      console.log(`${result} ${playerWins}-${computerWins}-${ROUNDS - playerWins - computerWins}`);
+    }
+
+    window.game = game;
+  })();
+</script>
